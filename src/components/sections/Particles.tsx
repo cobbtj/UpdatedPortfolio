@@ -1,16 +1,30 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import React from "react";
+
+type Particle = {
+  top: string;
+  left: string;
+  duration: number;
+};
 
 export default function Particles() {
-  const particles = React.useMemo(() => {
-    return Array.from({ length: 20 }).map(() => ({
+  // ✅ Store particles only in state
+  const [particles, setParticles] = useState<Particle[]>([]);
+
+  // ✅ Run ONLY on client, AFTER the first render (no SSR conflicts)
+  useEffect(() => {
+    const generated = Array.from({ length: 20 }).map(() => ({
       top: `${Math.random() * 100}%`,
       left: `${Math.random() * 100}%`,
       duration: 4 + Math.random() * 3,
     }));
+    setParticles(generated);
   }, []);
+
+  // ✅ First render returns nothing so SSR & hydration match
+  if (particles.length === 0) return null;
 
   return (
     <>
