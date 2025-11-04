@@ -1,7 +1,12 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import dynamic from "next/dynamic";
+
+const Particles = dynamic(() => import("./Particles"), {
+  ssr: false, // ✅ Prevents server from rendering it
+});
 
 
 /* ✅ Mouse-based tilt wrapper */
@@ -10,8 +15,6 @@ const MagneticText = ({ children }: { children: React.ReactNode }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useTransform(y, [-50, 50], [8, -8]); // 3D depth
-  const rotateY = useTransform(x, [-50, 50], [-8, 8]);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const handleMouseMove = (e: React.MouseEvent) => {
     const { innerWidth, innerHeight } = window;
@@ -120,39 +123,9 @@ export default function Hero() {
 
 
 
-import { useEffect, useState } from "react";
-/* ✅ Floating particles for atmosphere */
-const Particles = () => {
-  const [positions, setPositions] = useState<{ top: string; left: string }[]>([]);
 
-  useEffect(() => {
-    const newPositions = Array.from({ length: 20 }).map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-    }));
-    setPositions(newPositions);
-  }, []); // ✅ Runs only on client after hydration
 
-  return (
-    <>
-      {positions.map((pos, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-[#7ce2ff] rounded-full"
-          style={pos}
-          animate={{
-            y: [-10, 10],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 4 + Math.random() * 3,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-    </>
-  );
-};
+
+
 
 
