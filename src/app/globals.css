@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/* Brand tokens (used via var() or arbitrary values like text-[var(--muted)]) */
+:root {
+  --bg: #0a0f14;
+  --panel: #0f1720;
+  --border: #1f2937;
+  --text: #e6eef8;
+  --muted: #9fb0c5;
+  --primary: #7ce2ff;
+  --primary-90: #63d8fb;
+  --primary-dim: rgba(124,226,255,0.25);
+}
+
+/* Base */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Container similar to “max-w-8xl” look */
+.container-max {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-max { padding-inline: 2rem; }
+}
+@media (min-width: 1024px) {
+  .container-max { padding-inline: 3rem; }
+}
+
+/* Subtle grid background like premium portfolios */
+.bg-grid {
+  position: relative;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0) 0 0/24px 24px,
+    linear-gradient(to bottom, rgba(124,226,255,0.06), transparent 35%);
+}
+
+
+/* Button styles */
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition-all;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #0b1220;
+}
+.btn-primary:hover {
+  background: var(--primary-90);
+  filter: drop-shadow(0 0 12px var(--primary-dim));
+}
+
+/* Glass panel */
+.glass {
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+/* Progress bar base (we’ll scaleX this via JS) */
+.progress-bar {
+  transform-origin: left;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), #3b82f6, var(--primary));
+}
+
+.glow-hover {
+  transition: all 0.3s ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(124, 226, 255, 0.5);
+}
