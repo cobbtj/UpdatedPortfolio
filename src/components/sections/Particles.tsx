@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 type Particle = {
@@ -10,25 +10,24 @@ type Particle = {
 };
 
 export default function Particles() {
-  const particlesRef = useRef<Particle[]>([]); // ✅ Not `any[] | null`
-  const [mounted, setMounted] = useState(false);
+  const [particles, setParticles] = useState<Particle[] | null>(null);
 
   useEffect(() => {
-    if (particlesRef.current.length === 0) {
-      particlesRef.current = Array.from({ length: 20 }).map(() => ({
-        top: `${Math.random() * 100}%`,
-        left: `${Math.random() * 100}%`,
-        duration: 4 + Math.random() * 3,
-      }));
-    }
-    setMounted(true); // ✅ Only this triggers re-render once
+    // Run only on client — safe from SSR mismatches and hydration errors
+    const generated = Array.from({ length: 20 }).map(() => ({
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      duration: 4 + Math.random() * 3,
+    }));
+    setParticles(generated);
   }, []);
 
-  if (!mounted) return null; // ✅ No ref access during initial render
+  // ✅ No particles on first render = no SSR mismatch
+  if (!particles) return null;
 
   return (
     <>
-      {particlesRef.current.map((p, i) => (
+      {particles.map((p, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-[#7ce2ff] rounded-full"
