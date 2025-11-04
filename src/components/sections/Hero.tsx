@@ -3,6 +3,7 @@
 import { motion, useMotionValue } from "framer-motion";
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const Particles = dynamic(() => import("./Particles"), { ssr: false });
 
@@ -107,17 +108,25 @@ export default function Hero() {
 
         {/* Buttons */}
         <div className="mt-10 flex gap-4 justify-center">
-          <a className="px-6 py-3 rounded-lg font-medium bg-[#7ce2ff] text-black hover:scale-[1.03] transition-transform">
+          <Link
+            href="/projects"
+            className="px-6 py-3 rounded-lg font-medium bg-[#7ce2ff] text-black hover:scale-[1.03] transition-transform"
+          >
             View Projects
-          </a>
-          <a className="px-6 py-3 rounded-lg font-medium bg-[#7ce2ff] text-black hover:scale-[1.03] transition-transform">
+          </Link>
+        
+          <Link
+            href="/contact"
+            className="px-6 py-3 rounded-lg font-medium bg-[#7ce2ff] text-black hover:scale-[1.03] transition-transform"
+          >
             Contact Me
-          </a>
+          </Link>
         </div>
       </motion.div>
     </section>
   );
 }
+
 
 
 
