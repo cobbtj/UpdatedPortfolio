@@ -4,12 +4,21 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
-const Particles = dynamic(() => import("./Particles"), {
-  ssr: false, // ✅ Prevents server from rendering it
-});
+const Particles = dynamic(() => import("./Particles"), { ssr: false });
+
+export default function Hero() {
+  return (
+    <section className="relative ...">
+      {/* Background & glow */}
+      {/* ✅ Particles now safe for production & hydration */}
+      <Particles />
+      {/* Hero content... */}
+    </section>
+  );
+}
 
 
-/* ✅ Mouse-based tilt wrapper */
+/*  Mouse-based tilt wrapper */
 const MagneticText = ({ children }: { children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -43,14 +52,14 @@ const MagneticText = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-/* ✅ Hero Section */
+/*  Hero Section */
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center text-center px-6 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f14] via-[#0a0f14] to-black" />
 
-      {/* ✅ Holographic orb behind content, slightly off-center
+      {/*  Holographic orb behind content, slightly off-center
   <div className="absolute -top-10 right-1/4 opacity-70">
     <HoloOrb />
   </div> */}
@@ -79,7 +88,7 @@ export default function Hero() {
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
           Building the Future of <br />
 
-          {/* ✅ Glowing + 3D Tilt Text */}
+          {/*  Glowing + 3D Tilt Text */}
           <MagneticText>
             <span className="relative inline-block text-[#7ce2ff] drop-shadow-[0_0_12px_#7ce2ff]">
               Dashboards & AI Automation
@@ -120,6 +129,7 @@ export default function Hero() {
     </section>
   );
 }
+
 
 
 
