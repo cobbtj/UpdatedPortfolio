@@ -1,33 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-type Particle = {
-  top: string;
-  left: string;
-  duration: number;
-};
-
+//  This runs on client only — no SSR mismatch.
 export default function Particles() {
-  const [particles, setParticles] = useState<Particle[] | null>(null);
+  const particlesRef = useRef<any[] | null>(null);
+  const [mounted, setMounted] = useState(false);
 
+  //  Run only once on client, after mount
   useEffect(() => {
-    //  This runs only on the client, after hydration
-    const generated = Array.from({ length: 20 }).map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      duration: 4 + Math.random() * 3,
-    }));
-    setParticles(generated);
+    if (!particlesRef.current) {
+      particlesRef.current = Array.from({ length: 20 }).map(() => ({
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        duration: 4 + Math.random() * 3,
+      }));
+    }
+    setMounted(true); // Only triggers re-render once
   }, []);
 
-  //  On server-side and initial client render, return nothing 
-  if (!particles) return null;
+  //  Avoid reading ref before hydration is complete
+  if (!mounted || !particlesRef.current) return null;
 
   return (
     <>
-      {particles.map((p, i) => (
+      {particlesRef.current.map((p, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 bg-[#7ce2ff] rounded-full"
