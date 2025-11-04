@@ -3,25 +3,28 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-//  This runs on client only — no SSR mismatch.
+type Particle = {
+  top: string;
+  left: string;
+  duration: number;
+};
+
 export default function Particles() {
-  const particlesRef = useRef<any[] | null>(null);
+  const particlesRef = useRef<Particle[]>([]); // ✅ Not `any[] | null`
   const [mounted, setMounted] = useState(false);
 
-  //  Run only once on client, after mount
   useEffect(() => {
-    if (!particlesRef.current) {
+    if (particlesRef.current.length === 0) {
       particlesRef.current = Array.from({ length: 20 }).map(() => ({
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
         duration: 4 + Math.random() * 3,
       }));
     }
-    setMounted(true); // Only triggers re-render once
+    setMounted(true); // ✅ Only this triggers re-render once
   }, []);
 
-  //  Avoid reading ref before hydration is complete
-  if (!mounted || !particlesRef.current) return null;
+  if (!mounted) return null; // ✅ No ref access during initial render
 
   return (
     <>
