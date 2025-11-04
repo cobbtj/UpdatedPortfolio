@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
@@ -118,6 +118,7 @@ export default function Hero() {
     </section>
   );
 }
+
 
 
 
