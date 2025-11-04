@@ -6,17 +6,6 @@ import dynamic from "next/dynamic";
 
 const Particles = dynamic(() => import("./Particles"), { ssr: false });
 
-export default function Hero() {
-  return (
-    <section className="relative ...">
-      {/* Background & glow */}
-      {/* ✅ Particles now safe for production & hydration */}
-      <Particles />
-      {/* Hero content... */}
-    </section>
-  );
-}
-
 
 /*  Mouse-based tilt wrapper */
 const MagneticText = ({ children }: { children: React.ReactNode }) => {
@@ -129,6 +118,7 @@ export default function Hero() {
     </section>
   );
 }
+
 
 
 
