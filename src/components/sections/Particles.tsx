@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
 type Particle = {
@@ -10,21 +10,24 @@ type Particle = {
 };
 
 export default function Particles() {
-  // ✅ Store particles only in state
   const [particles, setParticles] = useState<Particle[]>([]);
+  const hasGenerated = useRef(false);
 
-  // ✅ Run ONLY on client, AFTER the first render (no SSR conflicts)
   useEffect(() => {
-    const generated = Array.from({ length: 20 }).map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      duration: 4 + Math.random() * 3,
-    }));
-    setParticles(generated);
+    // ✅ Only run once on client, never during SSR/hydration
+    if (!hasGenerated.current) {
+      const generated = Array.from({ length: 20 }).map(() => ({
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        duration: 4 + Math.random() * 3,
+      }));
+      setParticles(generated);
+      hasGenerated.current = true;
+    }
   }, []);
 
-  // ✅ First render returns nothing so SSR & hydration match
-  if (particles.length === 0) return null;
+  // ✅ Return null on first render to avoid SSR mismatch
+  if (!hasGenerated.current) return null;
 
   return (
     <>
@@ -34,11 +37,7 @@ export default function Particles() {
           className="absolute w-1 h-1 bg-[#7ce2ff] rounded-full"
           style={{ top: p.top, left: p.left }}
           animate={{ y: [-10, 10], opacity: [0, 1, 0] }}
-          transition={{
-            duration: p.duration,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          transition={{ duration: p.duration, repeat: Infinity, ease: "easeInOut" }}
         />
       ))}
     </>
