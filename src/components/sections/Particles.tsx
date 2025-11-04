@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 
 type Particle = {
@@ -9,20 +9,23 @@ type Particle = {
   duration: number;
 };
 
-export default function Particles() {
-  const [particles, setParticles] = useState<Particle[] | null>(null);
+// ✅ Helper to safely generate random particles only on client side
+function generateParticles(count: number): Particle[] {
+  return Array.from({ length: count }).map(() => ({
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    duration: 4 + Math.random() * 3,
+  }));
+}
 
-  useEffect(() => {
-    // Run only on client — safe from SSR mismatches and hydration errors
-    const generated = Array.from({ length: 20 }).map(() => ({
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      duration: 4 + Math.random() * 3,
-    }));
-    setParticles(generated);
+export default function Particles() {
+  // ✅ Only generate particles on client — not during SSR
+  const particles = React.useMemo(() => {
+    if (typeof window === "undefined") return null;
+    return generateParticles(20);
   }, []);
 
-  // ✅ No particles on first render = no SSR mismatch
+  // ✅ Avoid hydration mismatch — render nothing on server
   if (!particles) return null;
 
   return (
